@@ -1,6 +1,6 @@
 {
   "name": "watch-css-media",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Provides an Observable stream that updates whenever the browser crosses a media-query threshold",
   "main": "index.js",
   "scripts": {

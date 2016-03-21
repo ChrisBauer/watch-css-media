@@ -18,8 +18,6 @@ import {map} from 'rxjs/operator/map';
 
 export function WatchCSSMedia () {
 
-    const queries = {};
-
     function defaultTransform (event, event$) {
         return {
             matches: event.matches,
@@ -30,27 +28,27 @@ export function WatchCSSMedia () {
     }
 
     function addQuery (query, callback, transform) {
-        const mql = window.matchMedia(`(${query})`),
+        query = `(${query})`;
+        transform = transform || defaultTransform;
+
+        const mql = window.matchMedia(query),
             event$ = Observable.fromEventPattern(
                 (cb) => mql.addListener(cb),
                 (cb) => mql.removeListener(cb)
-            )
-                .map(event => transform ? transform(event, event$) : defaultTransform(event, event$))
-                .startWith(mql.matches)
-                .subscribe(callback);
-        
-        queries[query] = {
-            callback: callback,
-            mql: mql,
-            event$: event$
-        };
+            );
 
-        return function unsubscribe () {
-            mql.removeListener(callback);
-            event$.dispose();
-            delete queries[query];
-        };
+        event$.startWith({ 
+            matches: mql.matches,
+            media: query,
+            originalEvent: null,
+            event$: event$
+        })
+            .map(event => transform(event, event$))
+            .subscribe(callback);
+        
+        return event$;
     }
+
     return {
         addQuery: (query, callback, transform) => {
             return addQuery(query, callback, transform);
