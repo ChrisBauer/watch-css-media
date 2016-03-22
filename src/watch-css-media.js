@@ -35,7 +35,7 @@ export function WatchCSSMedia () {
         query = `(${query})`;
         transform = transform || defaultTransform;
 
-        const mql = global.matchMedia(query),
+        const mql = matchMedia(query),
             event$ = Observable.fromEventPattern(
                 (cb) => mql.addListener(cb),
                 (cb) => mql.removeListener(cb)

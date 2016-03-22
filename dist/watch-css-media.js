@@ -41,7 +41,7 @@ function WatchCSSMedia() {
         query = '(' + query + ')';
         transform = transform || defaultTransform;
 
-        var mql = global.matchMedia(query),
+        var mql = matchMedia(query),
             event$ = _Rx.Observable.fromEventPattern(function (cb) {
             return mql.addListener(cb);
         }, function (cb) {
