@@ -29,8 +29,8 @@ Generate the docs for the readme with `npm run build-readme`
     * [.addQuery(query, callback, [transform])](#module_WatchCSSMedia+addQuery) ⇒ <code>Observable</code>
     * [.addQueries(args)](#module_WatchCSSMedia+addQueries) ⇒ <code>Array.&lt;Observable&gt;</code>
     * [.onOrientationChange(callback)](#module_WatchCSSMedia+onOrientationChange) ⇒ <code>Observable</code>
-    * [.onWidthGreaterThan(min, callback)](#module_WatchCSSMedia+onWidthGreaterThan) ⇒ <code>Observable</code>
-    * [.onWidthLessThan(min, callback)](#module_WatchCSSMedia+onWidthLessThan) ⇒ <code>Observable</code>
+    * [.onWidthGreaterThan(min, callback, [transform])](#module_WatchCSSMedia+onWidthGreaterThan) ⇒ <code>Observable</code>
+    * [.onWidthLessThan(min, callback, [transform])](#module_WatchCSSMedia+onWidthLessThan) ⇒ <code>Observable</code>
 
 <a name="module_WatchCSSMedia+addQuery"></a>
 
@@ -73,7 +73,7 @@ Shortcut method to add an event listener for orientation changes
 
 <a name="module_WatchCSSMedia+onWidthGreaterThan"></a>
 
-### watchCSSMedia.onWidthGreaterThan(min, callback) ⇒ <code>Observable</code>
+### watchCSSMedia.onWidthGreaterThan(min, callback, [transform]) ⇒ <code>Observable</code>
 Shortcut method to add an event listener for browser width changes. This allows for easy
 creation of callbacks that fire when the browser crosses certain width thresholds without
 having to use `window.on('resize');`
@@ -84,11 +84,12 @@ having to use `window.on('resize');`
 | Param | Type | Description |
 | --- | --- | --- |
 | min | <code>string</code> | a string representing the minimum width, including units (e.g. '500px') |
-| callback | <code>function</code> | a callback function to execute when the browser width crosses the threshold        The callback function will be invoked with an object containing the following keys:        `matches: boolean. whether (true) or not (false) the browser is wider than the provided width`        `query: string. the original media query string`        `originalEvent: Event. the original event that triggered the callback`        `event$: Observable. An Observable event stream created from the MediaQueryList listener |
+| callback | <code>function</code> | a callback function to execute when the browser width crosses the threshold        Unless a transform function is provided, the callback function will be invoked         with an object containing the following keys:        `matches: boolean. whether (true) or not (false) the browser is wider than the provided width`        `query: string. the original media query string`        `originalEvent: Event. the original event that triggered the callback`        `event$: Observable. An Observable event stream created from the MediaQueryList listener |
+| [transform] | <code>function</code> | an optional function to map the mql event object to the        parameter passed into the callback |
 
 <a name="module_WatchCSSMedia+onWidthLessThan"></a>
 
-### watchCSSMedia.onWidthLessThan(min, callback) ⇒ <code>Observable</code>
+### watchCSSMedia.onWidthLessThan(min, callback, [transform]) ⇒ <code>Observable</code>
 Shortcut method to add an event listener for browser width changes. This allows for easy
 creation of callbacks that fire when the browser crosses certain width thresholds without
 having to use `window.on('resize');`
@@ -99,6 +100,7 @@ having to use `window.on('resize');`
 | Param | Type | Description |
 | --- | --- | --- |
 | min | <code>string</code> | a string representing the maximum width, including units (e.g. '500px') |
-| callback | <code>function</code> | a callback function to execute when the browser width crosses the threshold        The callback function will be invoked with an object containing the following keys:        `matches: boolean. whether (true) or not (false) the browser is narrower than the provided width`        `query: string. the original media query string`        `originalEvent: Event. the original event that triggered the callback`        `event$: Observable. An Observable event stream created from the MediaQueryList listener |
+| callback | <code>function</code> | a callback function to execute when the browser width crosses the threshold        Unless a transform function is provided, the callback function will be invoked         with an object containing the following keys:        `matches: boolean. whether (true) or not (false) the browser is narrower than the provided width`        `query: string. the original media query string`        `originalEvent: Event. the original event that triggered the callback`        `event$: Observable. An Observable event stream created from the MediaQueryList listener |
+| [transform] | <code>function</code> | an optional function to map the mql event object to the        parameter passed into the callback |
 
 
