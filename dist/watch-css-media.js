@@ -26,8 +26,7 @@ var _map = require('rxjs/operator/map');
 /**
  * @module WatchCSSMedia
  */
-function WatchCSSMedia(global) {
-    global = global || window;
+function WatchCSSMedia() {
 
     function defaultTransform(event, event$) {
         return {
