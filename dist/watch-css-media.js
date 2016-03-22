@@ -1,14 +1,3 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.WatchCSSMedia = WatchCSSMedia;
-
-var _Rx = require('rxjs/Rx');
-
-var _map = require('rxjs/operator/map');
-
 /**
  * Copyright (c) 2016, Chris Bauer <cbauer@outlook.com>
  *
@@ -23,8 +12,22 @@ var _map = require('rxjs/operator/map');
  * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+'use strict';
 
-function WatchCSSMedia() {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.WatchCSSMedia = WatchCSSMedia;
+
+var _Rx = require('rxjs/Rx');
+
+var _map = require('rxjs/operator/map');
+
+/**
+ * @module WatchCSSMedia
+ */
+function WatchCSSMedia(global) {
+    global = global || window;
 
     function defaultTransform(event, event$) {
         return {
@@ -39,7 +42,7 @@ function WatchCSSMedia() {
         query = '(' + query + ')';
         transform = transform || defaultTransform;
 
-        var mql = window.matchMedia(query),
+        var mql = global.matchMedia(query),
             event$ = _Rx.Observable.fromEventPattern(function (cb) {
             return mql.addListener(cb);
         }, function (cb) {
@@ -59,9 +62,35 @@ function WatchCSSMedia() {
     }
 
     return {
+        /**
+         * @function addQuery
+         * @instance
+         * @param {string} query a media query, which will be watched
+         * @param {Function} callback a function to call when the media query boundary is changed
+         *        Unless a transform function is provided, the callback function will be invoked 
+         *        with an object containing the following keys:
+         *        `matches: boolean. whether (true) or not (false) the browser matches the specified query`
+         *        `query: string. the original media query string`
+         *        `originalEvent: Event. the original event that triggered the callback`
+         *        `event$: Observable. An Observable event stream created from the MediaQueryList listener
+         * @param {Function} [transform] an optional function to map the mql event object to the
+         *        parameter passed into the callback
+         * @return {Observable} An Observable event stream created from the MediaQueryList listener
+         * @description
+         * General function to create a media query listener from a specified media query
+         */
         addQuery: function addQuery(query, callback, transform) {
             return _addQuery(query, callback, transform);
         },
+        /**
+         * @function addQueries
+         * @instance
+         * @param {Array} args an array of {query, callback, transform} objects
+         * @return {Observable[]} An Array of Observable event streams created from the MediaQueryList listeners
+         * @description
+         * Shortcut method to add multiple listeners. Each element in the arguments array corresponds to the 
+         * parameters of {@link module:WatchCSSMedia#addQuery|addQuery}
+         */
         addQueries: function addQueries(args) {
             if (!Array.isArray(args)) {
                 throw new Error('expected Array but received ' + JSON.stringify(args));
@@ -70,11 +99,24 @@ function WatchCSSMedia() {
                 return _addQuery.apply(_addQuery, arg);
             });
         },
+        /**
+         * @function onOrientationChange
+         * @instance
+         * @param {Function} callback a callback function to execute when the orientation changes
+         *        The callback function will be invoked with an object containing the following keys:
+         *        `isLandscape: boolean. whether (true) or not (false) the device is now in landscape orientation`
+         *        `isPortrait: boolean. whether (true) or not (false) the device is now in portrait orientation`
+         *        `query: string. the original media query string`
+         *        `originalEvent: Event. the original event that triggered the callback`
+         *        `event$: Observable. An Observable event stream created from the MediaQueryList listener
+         * @returns {Observable} An Observable event stream created from the MediaQueryList listener
+         * @description
+         * Shortcut method to add an event listener for orientation changes
+         */
         onOrientationChange: function onOrientationChange(callback) {
             var query = 'orientation: landscape';
             return _addQuery(query, callback, function (event, event$) {
                 return {
-                    matches: event.matches,
                     isLandscape: event.matches,
                     isPortrait: !event.matches,
                     query: query,
@@ -83,9 +125,41 @@ function WatchCSSMedia() {
                 };
             });
         },
+        /**
+         * @function onWidthGreaterThan
+         * @instance
+         * @param {string} min a string representing the minimum width, including units (e.g. '500px')
+         * @param {Function} callback a callback function to execute when the browser width crosses the threshold
+         *        The callback function will be invoked with an object containing the following keys:
+         *        `matches: boolean. whether (true) or not (false) the browser is wider than the provided width`
+         *        `query: string. the original media query string`
+         *        `originalEvent: Event. the original event that triggered the callback`
+         *        `event$: Observable. An Observable event stream created from the MediaQueryList listener
+         * @returns {Observable} An Observable event stream created from the MediaQueryList listener
+         * @description
+         * Shortcut method to add an event listener for browser width changes. This allows for easy
+         * creation of callbacks that fire when the browser crosses certain width thresholds without
+         * having to use `window.on('resize');`
+         */
         onWidthGreaterThan: function onWidthGreaterThan(min, callback) {
             return _addQuery('min-width: ' + min, callback);
         },
+        /**
+         * @function onWidthLessThan
+         * @instance
+         * @param {string} min a string representing the maximum width, including units (e.g. '500px')
+         * @param {Function} callback a callback function to execute when the browser width crosses the threshold
+         *        The callback function will be invoked with an object containing the following keys:
+         *        `matches: boolean. whether (true) or not (false) the browser is narrower than the provided width`
+         *        `query: string. the original media query string`
+         *        `originalEvent: Event. the original event that triggered the callback`
+         *        `event$: Observable. An Observable event stream created from the MediaQueryList listener
+         * @returns {Observable} An Observable event stream created from the MediaQueryList listener
+         * @description
+         * Shortcut method to add an event listener for browser width changes. This allows for easy
+         * creation of callbacks that fire when the browser crosses certain width thresholds without
+         * having to use `window.on('resize');`
+         */
         onWidthLessThan: function onWidthLessThan(max, callback) {
             return _addQuery('max-width: ' + max, callback);
         }
