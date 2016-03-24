@@ -14,7 +14,8 @@
  */ 
 'use strict';
 
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEventPattern';
 import {map} from 'rxjs/operator/map';
 
 /**

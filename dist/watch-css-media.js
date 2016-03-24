@@ -19,7 +19,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.WatchCSSMedia = WatchCSSMedia;
 
-var _Rx = require('rxjs/Rx');
+var _Observable = require('rxjs/Observable');
+
+require('rxjs/add/observable/fromEventPattern');
 
 var _map = require('rxjs/operator/map');
 
@@ -42,7 +44,7 @@ function WatchCSSMedia() {
         transform = transform || defaultTransform;
 
         var mql = matchMedia(query),
-            event$ = _Rx.Observable.fromEventPattern(function (cb) {
+            event$ = _Observable.Observable.fromEventPattern(function (cb) {
             return mql.addListener(cb);
         }, function (cb) {
             return mql.removeListener(cb);
