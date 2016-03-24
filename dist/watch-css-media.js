@@ -23,7 +23,9 @@ var _Observable = require('rxjs/Observable');
 
 require('rxjs/add/observable/fromEventPattern');
 
-var _map = require('rxjs/operator/map');
+require('rxjs/add/operator/map');
+
+require('rxjs/add/operator/startWith');
 
 /**
  * @module WatchCSSMedia

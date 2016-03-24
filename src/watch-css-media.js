@@ -16,7 +16,8 @@
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEventPattern';
-import {map} from 'rxjs/operator/map';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/startWith';
 
 /**
  * @module WatchCSSMedia
